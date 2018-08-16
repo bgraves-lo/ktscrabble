@@ -4,6 +4,7 @@ import java.util.stream.Stream
 
 class KtScrabble constructor(wordFile: String) {
     private val topNode = TrieNode()
+    private val boggleBoard = Boggle()
 
     init {
         val stream = Files.lines(Paths.get(wordFile))
@@ -21,4 +22,10 @@ class KtScrabble constructor(wordFile: String) {
     fun findWords(letters: String): Set<String> {
         return topNode.findWords(letters)
     }
+
+    fun boggleWords(letters: String): Set<String> {
+        boggleBoard.setLetters(letters)
+        return topNode.boggleWords(boggleBoard)
+    }
+
 }

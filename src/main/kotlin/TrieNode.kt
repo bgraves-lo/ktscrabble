@@ -1,6 +1,8 @@
+import sun.text.normalizer.Trie
+
 class TrieNode {
-    private val children: MutableMap<Char, TrieNode> = mutableMapOf()
-    private var isWord: Boolean = false
+    private val children = mutableMapOf<Char, TrieNode>()
+    private var isWord = false
 
     fun add(word: String) {
         add(word.toLowerCase().asIterable().iterator())
@@ -12,8 +14,16 @@ class TrieNode {
 
     fun findWords(letters: String): Set<String> {
         val sanitizedLetters = letters.toLowerCase().replace("[^a-z.]","")
-        val words: MutableSet<String> = mutableSetOf()
+        val words = mutableSetOf<String>()
         findWords(LetterBag(sanitizedLetters), words, "")
+        return words
+    }
+
+    fun boggleWords(boggleBoard: Boggle): Set<String> {
+        val words = mutableSetOf<String>()
+        boggleBoard.tiles.forEach { tile ->
+            boggleWords(tile, words, "")
+        }
         return words
     }
 
@@ -70,6 +80,21 @@ class TrieNode {
                         it.value.findWords(letters, words, word + it.key)
                         letters.add(it.key)
                     }
+        }
+    }
+
+    private fun boggleWords(tile: Boggle.Tile, words: MutableSet<String>, word: String) {
+        if (isWord) words.add(word)
+
+        val unvisitedNeighbors = tile.unvisitedNeighbors()
+
+        if (unvisitedNeighbors.isNotEmpty() && children.isNotEmpty()) {
+            tile.visit()
+            unvisitedNeighbors.forEach { neighborTile ->
+                val letter = neighborTile.letter
+                children[letter]?.boggleWords(neighborTile, words, word + letter)
+            }
+            tile.reset()
         }
     }
 }
