@@ -1,5 +1,3 @@
-import sun.text.normalizer.Trie
-
 class TrieNode {
     private val children = mutableMapOf<Char, TrieNode>()
     private var isWord = false

@@ -3,9 +3,11 @@ import io.ktor.routing.*
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.server.engine.embeddedServer
+import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.gson.*
 import io.ktor.http.HttpStatusCode
+import org.slf4j.event.Level
 
 fun main(args: Array<String>) {
     val dictionary = KtScrabble("assets/enable1.txt")
@@ -16,6 +18,11 @@ fun main(args: Array<String>) {
                 setPrettyPrinting()
             }
         }
+
+        install(CallLogging) {
+            level = Level.INFO
+        }
+
         routing {
             get("/") {
                 call.respond("Oh.  Hai.  Do '/find?letters=<my_sweet_letters>'.  Use a '.' for blank tiles\n\nOR, do '/boggle?letters=<my_16_letters>' to find some sweet boggle words.")
@@ -40,7 +47,7 @@ fun main(args: Array<String>) {
                     val words = letters?.let {
                         dictionary.boggleWords(letters).sorted().groupBy { it.length }.toSortedMap()
                     } ?: sortedMapOf()
-                    call.respond(words)
+                    call.respond(mapOf("board" to letters?.chunked(4), "words" to words))
                 }
             }
         }
