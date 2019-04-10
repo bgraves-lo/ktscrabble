@@ -9,7 +9,7 @@ import io.ktor.gson.*
 import io.ktor.http.HttpStatusCode
 import org.slf4j.event.Level
 
-fun main(args: Array<String>) {
+fun main() {
     val dictionary = KtScrabble("assets/enable1.txt")
 
     embeddedServer(Netty, 8080) {
