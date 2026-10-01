@@ -3,15 +3,15 @@ class TrieNode {
     private var isWord = false
 
     fun add(word: String) {
-        add(word.toLowerCase().asIterable().iterator())
+        add(word.lowercase().asIterable().iterator())
     }
 
     fun isWord(word: String): Boolean {
-        return isWord(word.toLowerCase().asIterable().iterator())
+        return isWord(word.lowercase().asIterable().iterator())
     }
 
     fun findWords(letters: String): Set<String> {
-        val sanitizedLetters = letters.toLowerCase().replace("[^a-z.]","")
+        val sanitizedLetters = letters.lowercase().replace("[^a-z.]","")
         val words = mutableSetOf<String>()
         findWords(LetterBag(sanitizedLetters), words, "")
         return words
